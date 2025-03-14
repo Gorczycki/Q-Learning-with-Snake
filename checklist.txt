@@ -1,0 +1,63 @@
+//board is (0,16) in length, (0,14) in height
+//meaning 17 length, 15 width
+
+//having trouble defining which cell to fill when growing the snake, it is dependent on the direction
+//fix by checking direction of the preceding two body cells, if(snake[2] == snake[1] minus an x value, we know we are in a 
+certain direction)
+
+//is the snake head the first index in body[] or the last? --> snake head is body[0], so everything is reversed
+
+//note, it is not possible for the snake to grow diagonally, so we are safe with the grow
+//function as it is
+
+//std::cout<<test.back().first<<" "<<test.back().second; is the tail, so snake printed in reverse?
+//std::cout<<test.front().first<<" "<<test.front().second; is the head.
+
+//cout prints tail to head or head to tail?
+
+//snake_grow looks good now
+
+//shift_snake looks good now
+
+
+5,8
+5,7
+4,7
+
+becomes
+
+6,8
+5,8
+5,7
+
+another:
+
+5,8
+5,7
+4,7
+3,7
+
+becomes
+
+6,8
+5,8
+5,7
+4,7
+
+//snake.cpp will need a function to grow, shift, take in direction from computer,
+//snake.cpp will not need a function for collision, or apple detection, or something for the other files
+
+//should the master game.cpp handle all of the booleans? for example defining the radius threshold to spawn the apple.
+//then game.cpp will have an if statement for apple eaten, thus prompting void place_apple() until radius works
+
+//we now have snake.cpp, apple.cpp, and timer.cpp. now test apple.cpp
+//with vector entry, it seems we have backward values for (x,y)
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+//Now for game.cpp:
+//not sure how to bring in direction changes
+//do we need a start_time() function?
+
+//game.cpp is working fine now without computer
+
+//now to learn about learning
