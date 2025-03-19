@@ -1,5 +1,7 @@
 //board is (0,16) in length, (0,14) in height
-//meaning 17 length, 15 width
+//meaning total board is 16*14
+
+g++ -std=c++20 testing.cpp game.cpp computer.cpp snake.cpp apple.cpp timer.cpp -o test.x
 
 //having trouble defining which cell to fill when growing the snake, it is dependent on the direction
 //fix by checking direction of the preceding two body cells, if(snake[2] == snake[1] minus an x value, we know we are in a 
@@ -61,3 +63,85 @@ becomes
 //game.cpp is working fine now without computer
 
 //now to learn about learning
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+will need a sleep_for on the direction changing from computer.
+
+optimal path for the snake will always be towards the apple. However we need to account for avoiding a self-collision or wall collision.
+We do not have an analytic solution for the snake game due to the apple's randomness in placement. Therefore body orientation is not a solved
+case. 
+
+A is a set of actions called the action space, S is a set of states called the state space. A policy function \pi is a probabilistic
+mapping from S to A., i.e., a_t = \pi (s_t) where a \in A, s_t \in S. We want to find optimal policy.
+
+Snake is a fully-observable game, so Bayesian RL is not a good fit. We will choose Q-Learning, using the Bellman equation, and also use epsilon-greedy 
+strategy, meaning it randomly explores with probability \epsilon and exploits current knowledge otherwise. Given this randomness, we may compare
+using std::mt19937 versus van der corput or halton or otherwise. Does Q-learning allow for full observability of the game?
+
+WE COULD USE MONTE CARLO METHODS?
+
+--> Monte carlo only learns from states that would appear in a prior game. It estimates state-action values 
+Q(s,a) by averaging the rewards received for taking action a in state s. Will also need a wrong_move function for if we
+are heading right but computer chooses left
+
+moved char direction in snake from private to public, we'll see if working. I want game.cpp to be the medium between computer.cpp and snake.cpp
+
+//now need to check for "bad" moves, which are not allowed in regular game. such as computer sending left when already travelling right
+
+will have {state_x, move_dir, reward}
+
+Linear function approximation:
+
+Q(s,a) = w_1f_1 + w_2f_2 + ... w_nf_n
+
+w_i = w_i + \alpha(G - Q(s,a))f_i
+
+after playing an episode, update weights using w_i = w_i + \alpha(G - Q(s,a))f_i
+where G is the sum of rewards from a state-action pair, \alpha is learning rate
+G_t = R_{t+1} + R_{t+2} + ... + R_T
+
+collect an episode into vectors, and then push them to csv's. then clear vectors. 
+Weights correspond to their feature.
+
+My reinforcement learning model consists of:
+- policy
+- weights
+- rewards
+- features
+- learning rate
+- epsilon greedy choice
+
+the policy chooses an action,
+the game gives a reward
+features describe the state
+The Q-Value is computed from the features and weights
+At the end of an episode, the weights are updated using monte carlo returns.
+
+Q_values of size 4 has elements of which the highest is chosen
+Each element of Q_values is computed from w_i*f_i
+
+at the end of each epsiode, calculate total return for each state-action pair
+
+void Game::set_board()
+{
+    board_reset();
+    for(int i = 0; i<snake.get_body().size(); i++)
+    {
+        board[snake.get_body()[i].second][snake.get_body()[i].first] = 1;
+    }
+
+    //board[snake.get_head().second][snake.get_head().first] = 3;
+    //for(int i = 1; i<snake.get_body().size(); i++)
+    //{
+    //    board[snake.get_body()[i].second][snake.get_body()[i].first] = 1;
+    //}
+    board[apple.get_apple_loc().second][apple.get_apple_loc().first] = 2;
+}
+
+
+
+
+
+
+

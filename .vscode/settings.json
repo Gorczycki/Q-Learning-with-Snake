@@ -52,6 +52,7 @@
         "algorithm": "cpp",
         "iostream": "cpp",
         "functional": "cpp",
-        "utility": "cpp"
+        "utility": "cpp",
+        "random": "cpp"
     }
 }

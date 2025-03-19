@@ -1,8 +1,8 @@
 #include "game.h"
 #include <cmath>
 
-Game::Game(Snake& s, Timer& t, Apple& a) 
-    : board(14, std::vector<int>(16, 0)), snake(s), timer(t), apple(a)
+Game::Game(Snake& s, Timer& t, Apple& a, Computer& c) 
+    : board(14, std::vector<int>(16, 0)), snake(s), timer(t), apple(a), computer(c)
 {
     
 }
@@ -10,37 +10,68 @@ Game::Game(Snake& s, Timer& t, Apple& a)
 void Game::set_board()
 {
     board_reset();
-    for(int i = 0; i<snake.get_body().size(); i++)
+    for(int i = 0; i < snake.get_body().size(); i++)
     {
-        board[snake.get_body()[i].second][snake.get_body()[i].first] = 1;
+        int x = snake.get_body()[i].first;
+        int y = snake.get_body()[i].second;
+        if (x >= 0 && x < 16 && y >= 0 && y < 14) {
+            board[y][x] = 1; // Set valid positions
+        }
     }
-    board[apple.get_apple_loc().second][apple.get_apple_loc().first] = 2;
+    int apple_x = apple.get_apple_loc().first;
+    int apple_y = apple.get_apple_loc().second;
+    if (apple_x >= 0 && apple_x < 16 && apple_y >= 0 && apple_y < 14) {
+        board[apple_y][apple_x] = 2; // Set valid apple position
+    }
 }
 
 void Game::update_board()
 {
-    std::this_thread::sleep_for(std::chrono::milliseconds(300));
+    //std::this_thread::sleep_for(std::chrono::milliseconds(300));
+    std::this_thread::sleep_for(std::chrono::milliseconds(5));
     bool temp = timer.Update();
+
     if(temp)
     {
+        if(self_collision() == true || wall_collision() == true)
+            set_game_toggle(false);
         snake.shift_snake();
+        computer.move_generator();
+        while( (snake.direction == 'R' && computer.move == 'L') || (snake.direction == 'L' && computer.move == 'R') ||
+        (snake.direction == 'U' && computer.move == 'D') || (snake.direction == 'D' && computer.move == 'U'))
+        {
+            computer.move_generator(); //makes sure valid move, computer will need to respond again
+        }
+        snake.direction = computer.move;
+
+        if(snake.get_head() == apple.get_apple_loc())
+        {
+            snake.snake_grow();
+            apple_radius();
+        }
+        if(self_collision() == true || wall_collision() == true)
+            set_game_toggle(false);
     }
-    if(snake.get_head() == apple.get_apple_loc())
-    {
-        snake.snake_grow();
-        apple_radius();
-    }
+    //if(snake.get_head() == apple.get_apple_loc())
+    //{
+    //    snake.snake_grow();
+    //    apple_radius();
+    //}
 }
 
 bool Game::wall_collision()
 {
-    if( (snake.get_body().front().first == 16) || (snake.get_body().front().second == 17))
-    {
-        return true; //keeping the reverse (x,y) pair in mind
-    }
-    else
-        return false;
-}
+    if(snake.get_head().first == 14)
+        return true;
+    else if(snake.get_head().first == -1)
+        return true;
+    else if(snake.get_head().second == 16)
+        return true;
+    else if(snake.get_head().second == -1)
+        return true;
+
+    return false;
+}   
 
 void Game::apple_radius()
 {
@@ -115,4 +146,9 @@ void Game::board_reset()
 {
     std::vector<std::vector<int>> temp(14, std::vector<int>(16, 0));
     board = temp;
+}
+
+void Game::game_reset()
+{
+    game_on_off = true;
 }

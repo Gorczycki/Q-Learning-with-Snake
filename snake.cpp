@@ -43,7 +43,7 @@ void Snake::snake_grow()
 //dependent on direction, so we cant do a simple for-loop shift of all elements as shown below for 'L'
 void Snake::shift_snake()
 {
-    if(snake_get_direction() == 'R')
+    if(direction == 'R')
     {
         std::pair<int, int> temp = body.front();
         std::pair<int, int> temp2;
@@ -55,7 +55,7 @@ void Snake::shift_snake()
             temp = temp2;
         }
     }
-    else if(snake_get_direction() == 'L')
+    else if(direction == 'L')
     {
         std::pair<int, int> temp = body.front();
         std::pair<int, int> temp2;
@@ -106,4 +106,13 @@ char Snake::snake_get_direction()
 std::pair<int, int> Snake::get_head()
 {
     return body.front();
+}
+
+void Snake::snake_reset()
+{
+    body.clear();
+    body.push_back({5,7});
+    body.push_back({4,7});
+    body.push_back({3,7});
+    direction = 'R';
 }

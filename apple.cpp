@@ -21,3 +21,8 @@ std::pair<int, int> Apple::get_apple_loc()
 {
     return apple_loc;
 }
+
+void Apple::apple_reset()
+{
+    apple_loc = {10,7};
+}

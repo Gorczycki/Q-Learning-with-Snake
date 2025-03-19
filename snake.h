@@ -32,8 +32,12 @@ class Snake
 
         std::pair<int, int> get_head();
 
-    private:
         char direction;
+
+        void snake_reset();
+
+    private:
+        //char direction;
         std::vector<std::pair<int, int>> body;
 
 

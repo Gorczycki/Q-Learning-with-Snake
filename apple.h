@@ -12,6 +12,8 @@ class Apple
 
         std::pair<int, int> get_apple_loc();
 
+        void apple_reset();
+
     private:
         std::pair<int, int> apple_loc;
 };
