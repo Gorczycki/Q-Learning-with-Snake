@@ -3,6 +3,7 @@
 
 int main()
 {
+    //std::unique_ptr<Snake> snake;
     Snake snake;
     Timer timer;
     Apple apple;
@@ -17,24 +18,33 @@ int main()
     int counter = 1;
 
     if(toggle == 'Y' || toggle == 'y')
-    for(int i = 0; i<50; i++)
+    for(int i = 0; i<=1000; i++)
     {
-        std::cout<<"game: "<<counter<<std::endl;
         while(game.game_toggle())
         {
             game.set_board();
-            //game.show_board();
-            //std::cout<<std::endl;
+            game.show_board();
+            std::cout<<std::endl;
             game.update_board();
         }
-        computer.episode_states_actions.clear();
+        std::cout<<"game: "<<counter<<std::endl;
+        //computer.episode_states_actions.clear();
         computer.weight_update();
         counter++;
         snake.snake_reset();
+        //snake = std::make_unique<Snake>();
         apple.apple_reset();
         game.game_reset();
     }
 
+        std::cout<<computer.episode_states_actions.size();
+        std::cout<<std::endl;
+        std::cout<<"game: "<<counter<<std::endl;
+
+        //std::cout<<std::endl;
+        //game.show_board();
+
+    //game.show_board();
 
     return 0;
 }

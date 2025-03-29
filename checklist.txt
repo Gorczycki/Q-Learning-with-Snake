@@ -139,8 +139,12 @@ void Game::set_board()
     board[apple.get_apple_loc().second][apple.get_apple_loc().first] = 2;
 }
 
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+Attempt 2:
 
+a state s may be distance from snake's head to apple, as well as distance from snake's head to tail. The optimal way to play snake is to leave enough distance such that
+snake's head is not in danger of running into itself, or creating a small boundary with it's body.
 
 
 

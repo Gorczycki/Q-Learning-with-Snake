@@ -10,8 +10,11 @@ void Apple::place_apple()
 {
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_int_distribution<int> distrib1(0,16);
-    std::uniform_int_distribution<int> distrib2(0,14);
+    //std::uniform_int_distribution<int> distrib1(0,16);
+    //std::uniform_int_distribution<int> distrib2(0,14);    
+
+    std::uniform_int_distribution<int> distrib1(0,15);
+    std::uniform_int_distribution<int> distrib2(0,13);
 
     apple_loc.first = distrib1(gen);
     apple_loc.second = distrib2(gen);

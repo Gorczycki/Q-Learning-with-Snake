@@ -1,0 +1,38 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "(gdb) Launch",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/a.out",  // Path to your compiled executable
+            "args": [],  // Add arguments for your program if needed
+            "stopAtEntry": false,  // Don't stop at the entry point
+            "cwd": "${workspaceFolder}",  // Current working directory
+            "environment": [],
+            "externalConsole": false,  // Set to true if you want a separate console for output
+            "MIMode": "gdb",  // Tells VS Code to use GDB for debugging
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "miDebuggerPath": "/usr/bin/gdb",  // Path to your GDB installation
+            "preLaunchTask": "C++: g++ build active file",  // Match this to your task in tasks.json
+            "miDebuggerArgs": "",
+            "logging": {
+                "moduleLoad": false,
+                "programOutput": true,
+                "trace": true
+            },
+            "serverLaunchTimeout": 20000,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "Listening on port"
+            },
+            "showDisplayString": true
+        }
+    ]
+}

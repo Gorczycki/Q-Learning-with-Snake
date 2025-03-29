@@ -35,13 +35,11 @@ class Computer
         std::vector<double> weights;
         //+1 for moving closer to apple, -10 for collision, 10 for eating apple
         std::vector<int> rewards = {1,-10,10};
+        std::vector<double> episode_rewards;
 
         double Q_S_A;
 
-        //weights:
-        double omega_1, omega_2, omega_3, omega_4, omega_5, omega_6;
-
-        double epsilon = 0.2;
+        double epsilon = 0.85;
 
         void weight_update();
 
@@ -55,13 +53,13 @@ class Computer
 
         Snake& snake;
         Apple& apple;
-        const double learning_rate = 0.1;
-        const double gamma = 0.9;
-        const double alpha = 0.5;
-        const double exploration_rate = 0.1;   
+        const double gamma = 0.95;
+        double alpha = 0.1;  
         double distance;
 
-        private:     
+        private:   
+            std::pair<int, int> prev_head;
+
 
 };
 
