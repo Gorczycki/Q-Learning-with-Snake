@@ -1,0 +1,231 @@
+//void Computer::self_collision()
+//{
+//    snake_copy->shift_snake();
+//
+//    for (size_t i = 1; i < snake_copy->get_body().size(); ++i) {
+//        if (snake_copy->get_head() == snake_copy->get_body()[i]) {
+//            collision = true;
+//            break;
+//        }
+//    }
+//
+//    while(collision)
+//    {
+//        collision_copy = false;
+//        //*snake_copy = snake;
+//        snake_copy = new Snake(snake);
+//        Computer::decision();
+//        snake_copy->shift_snake();
+//        for (size_t i = 1; i < snake_copy->get_body().size(); ++i) {
+//            if (snake_copy->get_head() == snake_copy->get_body()[i]) 
+//                {
+//                    collision_copy = true;
+//                    break;
+//                }
+//        }
+//        if(collision_copy == false)
+//            collision = false;
+//
+//        delete snake_copy;
+//    }
+//}
+
+
+
+
+
+
+
+void Computer::decision()
+{
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_real_distribution<double> dist(0,1);
+    double give = dist(gen); //for random move occurring x% of the time
+    double give2 = dist(gen); //for choosing between random move and determined move
+    
+
+    if(give2 >= epsilon)
+    {
+    if(give <= 0.25)
+        direction = 'R';
+    else if(give > 0.25 && give <= 0.5)
+        direction = 'L';
+    else if(give > 0.5 && give <= 0.75)
+        direction = 'U';
+    else if(give > 0.75)
+        direction = 'D';
+    }
+    else
+    {
+        //pre-computes best move by reduced distance, then sends this best move
+        snake_head_y = snake.get_body().front().second;
+        snake_head_x = snake.get_body().front().first;
+        apple_y = apple.get_apple_loc().second;
+        apple_x = apple.get_apple_loc().first;
+
+        radius_1 = sqrt( pow((snake_head_x+1) - apple_x, 2) + pow(snake_head_y - apple_y, 2)); //right
+        radius_2 = sqrt( pow((snake_head_x-1) - apple_x, 2) + pow(snake_head_y - apple_y, 2)); //left
+        radius_3 = sqrt( pow(snake_head_x - apple_x, 2) + pow((snake_head_y+1) - apple_y, 2)); //up
+        radius_4 = sqrt( pow(snake_head_x - apple_x, 2) + pow((snake_head_y-1) - apple_y, 2)); //down
+
+        right = {{'R', radius_1}};
+        left = {{'L', radius_2}};
+        up = {{'U', radius_3}};
+        down = {{'D', radius_4}};
+
+        matches.push_back(right);
+        matches.push_back(left);
+        matches.push_back(up);
+        matches.push_back(down);
+           
+        if(snake.direction == 'R')
+        {
+            choice = std::min({radius_2, radius_3, radius_4});
+            for(auto b : matches)
+                for(auto const& pair : b)
+                    if(pair.second == choice)
+                        direction = pair.first;
+        }
+        else if(snake.direction == 'L')
+        {
+            choice = std::min({radius_1, radius_3, radius_4});
+            for(auto b : matches)
+                for(auto const& pair : b)
+                    if(pair.second == choice)
+                        direction = pair.first;
+        }
+        else if(snake.direction == 'U')
+        {
+            choice = std::min({radius_1, radius_2, radius_4});
+            for(auto b : matches)
+                for(auto const& pair : b)
+                    if(pair.second == choice)
+                        direction = pair.first;
+        }
+        else if(snake.direction == 'D')
+        {
+            choice = std::min({radius_1, radius_2, radius_3});
+            for(auto b : matches)
+                for(auto const& pair : b)
+                    if(pair.second == choice)
+                        direction = pair.first;
+        }
+        matches.clear();
+    }
+    
+
+    move = direction;
+}
+
+
+
+
+
+
+
+void Computer::alternative()
+{
+    Computer::self_collision();
+    if(collision == true)
+    {
+        //choose different move under some decision...
+        
+        
+
+
+    }
+
+    //Q-table: Q(state,action)
+}
+
+
+
+
+
+
+
+void Computer::decision()
+{
+    //pre-computes best move by reduced distance, then sends this best move
+    snake_head_y = snake.get_body().front().second;
+    snake_head_x = snake.get_body().front().first;
+    apple_y = apple.get_apple_loc().second;
+    apple_x = apple.get_apple_loc().first;
+    radius_1 = sqrt( pow((snake_head_x+1) - apple_x, 2) + pow(snake_head_y - apple_y, 2)); //right
+    radius_2 = sqrt( pow((snake_head_x-1) - apple_x, 2) + pow(snake_head_y - apple_y, 2)); //left
+    radius_3 = sqrt( pow(snake_head_x - apple_x, 2) + pow((snake_head_y+1) - apple_y, 2)); //up
+    radius_4 = sqrt( pow(snake_head_x - apple_x, 2) + pow((snake_head_y-1) - apple_y, 2)); //down
+    right = {{'R', radius_1}};
+    left = {{'L', radius_2}};
+    up = {{'U', radius_3}};
+    down = {{'D', radius_4}};
+    matches.push_back(right);
+    matches.push_back(left);
+    matches.push_back(up);
+    matches.push_back(down);
+       
+    if(snake.direction == 'R')
+    {
+        choice = std::min({radius_2, radius_3, radius_4});
+        for(auto b : matches)
+            for(auto const& pair : b)
+                if(pair.second == choice)
+                    direction = pair.first;
+    }
+    else if(snake.direction == 'L')
+    {
+        choice = std::min({radius_1, radius_3, radius_4});
+        for(auto b : matches)
+            for(auto const& pair : b)
+                if(pair.second == choice)
+                    direction = pair.first;
+    }
+    else if(snake.direction == 'U')
+    {
+        choice = std::min({radius_1, radius_2, radius_4});
+        for(auto b : matches)
+            for(auto const& pair : b)
+                if(pair.second == choice)
+                    direction = pair.first;
+    }
+    else if(snake.direction == 'D')
+    {
+        choice = std::min({radius_1, radius_2, radius_3});
+        for(auto b : matches)
+            for(auto const& pair : b)
+                if(pair.second == choice)
+                    direction = pair.first;
+    }
+    matches.clear();
+
+    move = direction;
+}
+
+
+
+
+
+
+if(snake.direction == 'R')
+        {
+            choice = std::min({radius_1, radius_3, radius_4});
+            for(auto it = matches.begin(); it != matches.end();)
+            {
+                if(it->second == choice && Computer::self_collision(it->first) == true)
+                {
+                    it = matches.erase(it);
+                    std::vector<double> temp;
+                    for(auto const& pair : matches)
+                    {
+                        temp.push_back(pair.second);
+                    }
+                    temp.sort(temp.begin(), temp.end());
+                    choice = temp[0];
+                }
+                else
+                {
+                    move = it->first;
+                    break;
+                }
+            }

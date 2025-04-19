@@ -3,11 +3,18 @@
 
 #include <vector>
 #include <iostream>
+#include <cmath>
+#include <fstream>
+#include <algorithm>
+#include <string>
+#include <sstream>
+//#include <SFML/Graphics.hpp>
 #include "game.h"
 #include "snake.h"
 #include "timer.h"
 #include "apple.h"
-#include "computer.h"
+//#include "computer.h"
+#include "computer2.h"
 
 
 //game.cpp takes input from computer.cpp
@@ -46,15 +53,24 @@ class Game
 
         void game_reset();
 
+        void results();
+
+        int apples_eaten;
+        int max_apples;
+
     private:
         std::vector<std::vector<int>> board;
         bool game_on_off = true;
-        int apples_eaten;
         char direction;
         Snake& snake;
         Timer& timer;
         Apple& apple;
         Computer& computer;
+
+        //Snake* snake_copy;
+        //int board_width = 16;
+        //int board_height = 14;    
+
 };
 
 

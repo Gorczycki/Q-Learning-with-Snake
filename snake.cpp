@@ -116,3 +116,22 @@ void Snake::snake_reset()
     body.push_back({3,7});
     direction = 'R';
 }
+
+//copy stuff:
+
+//Snake::Snake(const Snake& other)
+//{
+//    body = other.body;
+//    direction = other.direction;
+//}
+//
+//Snake& Snake::operator=(const Snake& other)
+//{   
+//    if(this != &other)
+//    {
+//        body = other.body;
+//        direction = other.direction;
+//    }
+//    return *this;
+//}
+

@@ -1,7 +1,7 @@
 //board is (0,16) in length, (0,14) in height
 //meaning total board is 16*14
 
-g++ -std=c++20 testing.cpp game.cpp computer.cpp snake.cpp apple.cpp timer.cpp -o test.x
+g++ -std=c++20 testing.cpp game.cpp computer2.cpp snake.cpp apple.cpp timer.cpp -o test.x
 
 //having trouble defining which cell to fill when growing the snake, it is dependent on the direction
 //fix by checking direction of the preceding two body cells, if(snake[2] == snake[1] minus an x value, we know we are in a 
@@ -146,6 +146,72 @@ Attempt 2:
 a state s may be distance from snake's head to apple, as well as distance from snake's head to tail. The optimal way to play snake is to leave enough distance such that
 snake's head is not in danger of running into itself, or creating a small boundary with it's body.
 
+With a certain probability, we want the snake to move in such a way that the distance between snake head and apple decreases
+This should be a higher probability, we want this action to be performed 8/10's chance.
 
+We cant just hard-code self-collision avoidance, this is where we need to bring in penalties!
+To begin penalties for self collision, wall collision, we need to create a state table
+A state will consist of distances from head to each body part. we will make it such that more emphasis
+is numerically placed on body parts closest to head, emphasis decreasing slightly as we move further towards tail from head
+
+self collision is working, so most of these games are ending due to self-collision
+
+4/1/25:
+Want to implement avoidance of self-collision. We are currently experiencing self-collision as
+the current function only seeks to minimize the distance from the snake's head to the apple, dragging the body along with it.
+Then the snake will seek to cross it's own body as it moves towards the apple. A solution will be to
+hard-code avoidance of self-collision. The learning will come in as we seek to crowd the snake into the minimum
+amount of cells, as in we define an imaginary rectangular area defined from width and height and then seek
+to minimize the actual area compared to imaginary area.
+
+update: actually, hard-coding self-avoidance is a bit of a cheat, as what if in a late stage game the snake traps itself?
+then it will have no choice. In the current implementation we are hard-coding a move that minimizes radius. 
+Is this fine for learning? can we build the learning around this fact? Maybe. if we somehow 
+compare the hard-code move against a move that sacrifices current positioning for better future 
+positioning. One would choose a sacrifice against current minimization in the case that a self-collision would occur,
+or to better fold the snake into a confined area. To begin comparison, we could make a copy of the snake body
+and then shift it under the hard-coded min move. We then check this shift for self-collision. 
+The current hard-coded min move is a policy.
+
+-remove epsilon in Computer::decision()
+
+
+g++ -o your_program your_program.cpp -lsfml-graphics -lsfml-window -lsfml-system
+
+g++ -std=c++20 testing.cpp game.cpp computer2.cpp snake.cpp apple.cpp timer.cpp -o test.x -lsfml-graphics -lsfml-window -lsfml-system
+
+g++ -std=c++20 testing.cpp game.cpp computer2.cpp snake.cpp apple.cpp timer.cpp -o test.x -I/opt/homebrew/Cellar/sfml/3.0.0_1/include -L/opt/homebrew/Cellar/sfml/3.0.0_1/lib -lsfml-graphics -lsfml-window -lsfml-system
+
+ python3 -m venv path/to/venv
+    source path/to/venv/bin/activate
+    python3 -m pip install xyz
+
+g++ -std=c++20 deleter.cpp -o jim.x
+
+function to show best game over 100 games, count apples eaten in a single game. Implemented by making a 3-tensor of a games' frames. if previous tensor had smaller 
+amount of elements, take current tensor, repeat. maybe not.
+want to instead count number of frames in current game, if current frames at end of current game is greater than max frames, this currentg
+game is the best game. Could make two txt files, one for current game and one for previous game, max.txt and pusher.txt. max.txt is initialized to zero,
+and pusher.txt takes first game and pushes it to max.txt. clear pusher.txt and then send game 2 to pusher.txt, check line count between pusher(game 2) and max.txt, 
+if pusher has more lines, clear max.txt and send pusher to max.txt, clear pusher for future game 3.
+
+in void Game::update_board() having std::this_thread::sleep_for(std::chrono::milliseconds(200)); i believe the seg-fault in Game::set_board() comes from having the milliseconds to low
+
+
+
+while (!game_over) {
+
+    Computer::State state = getCurrentState(); // 1. record state
+
+    char action = computer.chooseAction(state); // 2. choose action
+
+    moveSnake(action); // 3. take action (you already have move functions)
+
+    float reward = getReward(); // 4. observe reward (apple eaten, death, step)
+    
+    Computer::State next_state = getCurrentState(); // 4. observe next state
+
+    computer.updateQ(state, action, reward, next_state); // 5. update Q
+}
 
 
