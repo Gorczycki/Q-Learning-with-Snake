@@ -2,7 +2,7 @@
 
 **C++ based Q-learning approach to the Snake game.**
 
-This project demonstrates reinforcement learning principles through a tabular Q-learning agent that learns to play the classic Snake game. The implementation avoids the use of deep learning frameworks and instead relies on discrete state-action mappings to guide the snake's decisions.
+This project demonstrates reinforcement learning principles through a tabular Q-learning agent that learns to play the classic Snake game. The implementation avoids the use of deep learning frameworks and instead relies on discrete state-action mappings to guide the snake's decisions. Best score achieved was 30. Meaning there is much room for improvement, I will most likely re-visit this project to improve.
 
 ## Features
 
