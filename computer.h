@@ -1,65 +1,68 @@
-#ifndef COMPUTER_H
-#define COMPUTER_H
-
-#include <vector>
-#include <random>
+#ifndef COMPUTER2_H
+#define COMPUTER2_H
 #include "snake.h"
 #include "apple.h"
+#include <vector>
+#include <random>
+#include <algorithm>
+#include <utility>
+#include <map>
+#include <fstream>
+#include <sstream>
+
+using State = std::tuple<int, int, char, bool, bool, bool, bool>;
 
 class Computer
 {
     public:
         Computer(Snake& snake, Apple& apple);
 
-        //getters:
+        void decision();
 
-        //setters:
+        bool self_collision(char move_);
 
-        void move_generator();
+        void getstate();
 
-        char move;
+        void master_move();
 
-        struct features
-        {
-            double apple_dist;
-            char direction;
-            bool danger_left;
-            bool danger_right;
-            bool danger_up;
-            bool danged_down;   
-        };
+        void q_decision();
 
-        std::vector<double> features;
+        void updateq();
 
-        
-        std::vector<double> weights;
-        //+1 for moving closer to apple, -10 for collision, 10 for eating apple
-        std::vector<int> rewards = {1,-10,10};
-        std::vector<double> episode_rewards;
+        char move; 
 
-        double Q_S_A;
+        void saveQTable(const std::string& filename);
+        void loadQTable(const std::string& filename);
 
-        double epsilon = 0.85;
-
-        void weight_update();
-
-        //storing states and actions for current epsiode:
-        std::vector<std::pair<std::vector<double>, char>> episode_states_actions;
-        //the state is represented by the features vector, and the action is "move"
-
-        //need state spaces as a csv, will take a state to be:
-
-        //State: {features}
-
+    private:
+        char direction;
+        double epsilon = 0.99;
+        bool collision;
         Snake& snake;
         Apple& apple;
-        const double gamma = 0.95;
-        double alpha = 0.1;  
-        double distance;
 
-        private:   
-            std::pair<int, int> prev_head;
+        int snake_head_x;
+        int snake_head_y;
+        int apple_y;
+        int apple_x;
+        double radius_1;
+        double radius_2;
+        double radius_3;
+        double radius_4;
+        std::map<char, int> matches;
+        int choice;
 
+        State state;
+        State prev_state;
+
+        std::map<State, std::map<char, double>> Qtable;
+
+        const float reward_apple = 10.0;
+        const float reward_death = -10.0;
+        const float reward_step = -0.1;
+
+        float alpha = 0.3;
+        float gamma = 0.9;
 
 };
 
