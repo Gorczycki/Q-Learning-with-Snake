@@ -36,31 +36,20 @@ void Game::set_board()
 void Game::update_board()
 {
     //std::this_thread::sleep_for(std::chrono::milliseconds(400));
-    std::this_thread::sleep_for(std::chrono::milliseconds(60));
+    std::this_thread::sleep_for(std::chrono::milliseconds(30));
     bool temp = timer.Update();
 
     if(temp)
     {
+        snake.shift_snake();
+
         if(self_collision() == true || wall_collision() == true) //game ender
         {
+            computer.updateq();
+            computer.saveQTable("qtable.dat");
             set_game_toggle(false);
             results();
         }
-
-        snake.shift_snake();
-        
-        computer.decision();
-        //computer.crude_correction();
-
-        while( (snake.direction == 'R' && computer.move == 'L') || (snake.direction == 'L' && computer.move == 'R') ||
-        (snake.direction == 'U' && computer.move == 'D') || (snake.direction == 'D' && computer.move == 'U'))
-        {
-            //computer.move_generator(); makes sure valid move, computer will need to respond again
-            //computer.crude_correction();
-            computer.decision();
-            //computer.self_collision();
-        }
-        snake.direction = computer.move; //computer.decision() modifies char move, which is set here
 
         if(snake.get_head() == apple.get_apple_loc())
         {
@@ -68,17 +57,13 @@ void Game::update_board()
             snake.snake_grow();
             apple_radius();
         }
-        if(self_collision() == true || wall_collision() == true)
-        {
-            set_game_toggle(false);
-            results();
-        }
+        
+        computer.master_move();
+        computer.updateq();
+        
+        snake.direction = computer.move; //computer.decision() modifies char move, which is set here
+
     }
-    //if(snake.get_head() == apple.get_apple_loc())
-    //{
-    //    snake.snake_grow();
-    //    apple_radius();
-    //}
 }
 
 bool Game::wall_collision()
@@ -146,32 +131,6 @@ char Game::get_direction()
 
 void Game::show_board()
 {
-    //window.clear();
-//
-    //for (auto& segment : snake.get_body())
-    //{
-    //    sf::RectangleShape rect(sf::Vector2f(20.f, 20.f)); // Size of each block in the snake
-    //    rect.setPosition(sf::Vector2f(segment.second * 20.f, segment.first * 20.f));  // Position based on snake's coordinates
-    //    rect.setFillColor(sf::Color::Green);  // Set the color of the snake
-    //    window.draw(rect);  // Draw the segment on the window
-    //}
-//
-    //sf::RectangleShape appleRect(sf::Vector2f(20.f, 20.f));  // Size of the apple
-    //appleRect.setPosition(sf::Vector2f(apple.get_apple_loc().second * 20.f, apple.get_apple_loc().first * 20.f));
-    //appleRect.setFillColor(sf::Color::Red);  // Set the color of the apple
-    //window.draw(appleRect);
-//
-    //window.display();
-
-    //for(int i = 0; i<board.size(); i++)
-    //{
-    //    for(int j = 0; j<board[i].size(); j++)
-    //    {
-    //        std::cout<<board[i][j]<<" ";
-    //    }
-    //    std::cout<<std::endl;
-    //}
-
     std::ofstream outfile("game_frames.txt", std::ios_base::app);
 
     for(int i = 0; i<board.size(); i++)
