@@ -24,3 +24,5 @@ Replay of a trained agent:
 3. A Q-table maps state-action pairs to expected future rewards.
 4. The agent selects actions using an epsilon-greedy policy.
 5. After each move, the Q-value is updated based on the received reward.
+
+if you've done something similar in C++, please reach out.
