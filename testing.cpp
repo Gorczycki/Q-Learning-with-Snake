@@ -21,7 +21,7 @@ int main()
     int counter = 1;
 
     if(toggle == 'Y' || toggle == 'y')
-    for(int i = 0; i<100; i++)
+    for(int i = 0; i<500; i++)
     {
         while(game.game_toggle())
         {
